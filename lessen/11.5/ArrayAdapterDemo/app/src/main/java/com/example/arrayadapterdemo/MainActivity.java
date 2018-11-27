@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 //                android.R.layout.simple_list_item_single_choice,getResources().getStringArray(R.array.news_category)));
         news_category_list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         news_category_list.setAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_multiple_choice,getResources().getStringArray(R.array.news_category)));
+                android.R.layout.simple_list_item_multiple_choice,
+                getResources().getStringArray(R.array.news_category)));
     }
 }
