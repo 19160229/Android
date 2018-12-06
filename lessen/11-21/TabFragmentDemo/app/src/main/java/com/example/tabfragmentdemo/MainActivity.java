@@ -1,5 +1,6 @@
 package com.example.tabfragmentdemo;
 
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -12,19 +13,9 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
-
-    View.OnClickListener onClickListener=new View.OnClickListener(){
-        @Override
-        public void onClick(View v) {
-            resetImgs();
-        }
-    };
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+        FriendFragment.OnFragmentInteractionListener,ContactFragment.OnFragmentInteractionListener
+        ,SettingFragment.OnFragmentInteractionListener {
 
     private ViewPager mViewPager;
     private FragmentPagerAdapter mAdapter;
@@ -40,6 +31,38 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton mImgContact;
     private ImageButton mImgSetting;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        initViews();
+        initEvents();
+        initDatas();
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+    }
+
+    @Override
+    public void onClick(View v) {
+        resetImgs();
+        switch (v.getId()){
+            case R.id.id_tab_wechat:
+                selectTab(0);
+                break;
+            case R.id.id_tab_friend:
+                selectTab(1);
+                break;
+            case R.id.id_tab_contact:
+                selectTab(2);
+                break;
+            case R.id.id_tab_setting:
+                selectTab(3);
+                break;
+        }
+    }
+
     private void initViews(){
         mViewPager=(ViewPager)findViewById(R.id.id_viewpager);
         mTabWechat=(LinearLayout)findViewById(R.id.id_tab_wechat);
@@ -53,15 +76,68 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initEvents(){
-        mTabWechat.setOnClickListener(onClickListener);
-        mTabFriend.setOnClickListener(onClickListener);
-        mTabSetting.setOnClickListener(onClickListener);
-        mTabContact.setOnClickListener(onClickListener);
+        mTabWechat.setOnClickListener(this);
+        mTabFriend.setOnClickListener(this);
+        mTabSetting.setOnClickListener(this);
+        mTabContact.setOnClickListener(this);
     }
 
     private void initDatas(){
         mFragments=new ArrayList<>();
         mFragments.add(new WechatFragment());
+        mFragments.add(new FriendFragment());
+        mFragments.add(new ContactFragment());
+        mFragments.add(new SettingFragment());
+
+        mAdapter=new FragmentPagerAdapter(getSupportFragmentManager()) {
+            @Override
+            public Fragment getItem(int i) {
+                return mFragments.get(i);
+            }
+
+            @Override
+            public int getCount() {
+                return mFragments.size();
+            }
+        };
+
+        mViewPager.setAdapter(mAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                mViewPager.setCurrentItem(i);
+                resetImgs();
+                selectTab(i);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+    }
+
+    private void selectTab(int i){
+        switch (i){
+            case 0:
+                mImgWechat.setImageResource(R.mipmap.tab_weixin);
+                break;
+            case 1:
+                mImgFriend.setImageResource(R.mipmap.tab_find_frd);
+                break;
+            case 2:
+                mImgContact.setImageResource(R.mipmap.tab_address);
+                break;
+            case 3:
+                mImgContact.setImageResource(R.mipmap.tab_settings);
+                break;
+        }
+        mViewPager.setCurrentItem(i);
     }
 
     private void resetImgs(){
