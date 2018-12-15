@@ -115,12 +115,15 @@ public class DownloadService extends Service {
     private Notification getNotification(String title,int progress){
         Intent intent=new Intent(this,MainActivity.class);
         PendingIntent pi=PendingIntent.getActivity(this,0,intent,0);
+
+        //Android8.0以上版本要求Notification设置频道
         String channelId="default";
         String channelName="默认";
         int importance=NotificationManager.IMPORTANCE_DEFAULT;
         NotificationChannel channel= new NotificationChannel(channelId,channelName,importance);
         NotificationManager notificationManager=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         notificationManager.createNotificationChannel(channel);
+
         NotificationCompat.Builder builder=new NotificationCompat.Builder(this,"default");
         builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher));
